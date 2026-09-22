@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AfterHours Automation | Autonomous Voice AI & Lead Recovery Platform</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23ffffff'/%3E%3Cstop offset='50%25' stop-color='%23e4e4e7'/%3E%3Cstop offset='100%25' stop-color='%2345454a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='%23060606'/%3E%3Cpath d='M 30 50 C 30 32, 45 32, 50 50 C 55 68, 70 68, 70 50 C 70 32, 55 32, 50 50 C 45 68, 30 68, 30 50 Z' stroke='url(%23g)' stroke-width='8' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Ccircle cx='50' cy='50' r='4' fill='%23ffffff'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Type system (Fraunces + Geist) is self-hosted via @font-face in
+       styles.css — no Google Fonts CDN round-trip. -->
+  <!-- Cinematic scroll & motion (self-hosted, no external runtime dependency) -->
+  <script src="vendor/gsap.min.js"></script>
+  <script src="vendor/lenis.min.js"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+
+  <!-- Icon sprite (Lucide, ISC license) -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="icon-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14" />
+  <path d="m12 5 7 7-7 7" /></symbol>
+  <symbol id="icon-arrow-up" viewBox="0 0 24 24"><path d="m5 12 7-7 7 7" />
+  <path d="M12 19V5" /></symbol>
+  <symbol id="icon-brain" viewBox="0 0 24 24"><path d="M12 18V5" />
+  <path d="M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4" />
+  <path d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5" />
+  <path d="M17.997 5.125a4 4 0 0 1 2.526 5.77" />
+  <path d="M18 18a4 4 0 0 0 2-7.464" />
+  <path d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517" />
+  <path d="M6 18a4 4 0 0 1-2-7.464" />
+  <path d="M6.003 5.125a4 4 0 0 0-2.526 5.77" /></symbol>
+  <symbol id="icon-briefcase" viewBox="0 0 24 24"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+  <rect width="20" height="14" x="2" y="6" rx="2" /></symbol>
+  <symbol id="icon-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></symbol>
+  <symbol id="icon-crown" viewBox="0 0 24 24"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z" />
+  <path d="M5 21h14" /></symbol>
+  <symbol id="icon-home" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+  <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></symbol>
+  <symbol id="icon-landmark" viewBox="0 0 24 24"><path d="M10 18v-7" />
+  <path d="M11.119 2.205a2 2 0 0 1 1.762 0l7.84 3.846A.5.5 0 0 1 20.5 7h-17a.5.5 0 0 1-.22-.949z" />
+  <path d="M14 18v-7" />
+  <path d="M18 18v-7" />
+  <path d="M3 22h18" />
+  <path d="M6 18v-7" /></symbol>
+  <symbol id="icon-laugh" viewBox="0 0 24 24"><path d="M15 10V9" />
+  <path d="M7.084 14.302a5.12 5.12 0 009.833 0 .24.24 0 00-.235-.302H7.32a.24.24 0 00-.235.302" />
+  <path d="M9 10V9" />
+  <circle cx="12" cy="12" r="10" /></symbol>
+  <symbol id="icon-lock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+  <path d="M7 11V7a5 5 0 0 1 10 0v4" /></symbol>
+  <symbol id="icon-mail" viewBox="0 0 24 24"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" />
+  <rect x="2" y="4" width="20" height="16" rx="2" /></symbol>
+  <symbol id="icon-message-circle" viewBox="0 0 24 24"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" /></symbol>
+  <symbol id="icon-mic" viewBox="0 0 24 24"><path d="M12 19v3" />
+  <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+  <rect x="9" y="2" width="6" height="13" rx="3" /></symbol>
+  <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" /></symbol>
+  <symbol id="icon-printer" viewBox="0 0 24 24"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+  <path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6" />
+  <rect x="6" y="14" width="12" height="8" rx="1" /></symbol>
+  <symbol id="icon-refresh-cw" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+  <path d="M21 3v5h-5" />
+  <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+  <path d="M8 16H3v5" /></symbol>
+  <symbol id="icon-scale" viewBox="0 0 24 24"><path d="M12 3v18" />
+  <path d="m19 8 3 8a5 5 0 0 1-6 0zV7" />
+  <path d="M3 7h1a17 17 0 0 0 8-2 17 17 0 0 0 8 2h1" />
+  <path d="m5 8 3 8a5 5 0 0 1-6 0zV7" />
+  <path d="M7 21h10" /></symbol>
+  <symbol id="icon-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /></symbol>
+  <symbol id="icon-smile" viewBox="0 0 24 24"><path d="M15 10V9" />
+  <path d="M16.472 15a6 6 0 01-8.943 0" />
+  <path d="M9 10V9" />
+  <circle cx="12" cy="12" r="10" /></symbol>
+  <symbol id="icon-snowflake" viewBox="0 0 24 24"><path d="m10 20-1.25-2.5L6 18" />
+  <path d="M10 4 8.75 6.5 6 6" />
+  <path d="m14 20 1.25-2.5L18 18" />
+  <path d="m14 4 1.25 2.5L18 6" />
+  <path d="m17 21-3-6h-4" />
+  <path d="m17 3-3 6 1.5 3" />
+  <path d="M2 12h6.5L10 9" />
+  <path d="m20 10-1.5 2 1.5 2" />
+  <path d="M22 12h-6.5L14 15" />
+  <path d="m4 10 1.5 2L4 14" />
+  <path d="m7 21 3-6-1.5-3" />
+  <path d="m7 3 3 6h4" /></symbol>
+  <symbol id="icon-stethoscope" viewBox="0 0 24 24"><path d="M11 2v2" />
+  <path d="M5 2v2" />
+  <path d="M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1" />
+  <path d="M8 15a6 6 0 0 0 12 0v-3" />
+  <circle cx="20" cy="10" r="2" /></symbol>
+  <symbol id="icon-wallet" viewBox="0 0 24 24"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1" />
+  <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" /></symbol>
+  <symbol id="icon-zap" viewBox="0 0 24 24"><path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z" /></symbol>
+  </svg>
+
+
+  <!-- Custom Inertia Cursor -->
+  <div id="cursor-dot" class="cursor-dot"></div>
+  <div id="cursor-ring" class="cursor-ring"></div>
+
+  <!-- Signature shader backdrop (desktop, WebGL-capable, motion-safe only —
+       see initShaderBackground() in script.js). Falls back to the CSS
+       glow orbs below when unavailable. -->
+  <canvas id="shader-canvas" aria-hidden="true"></canvas>
+
+  <!-- Ambient Depth Glows (fallback atmosphere when the shader isn't running) -->
+  <div class="glow-orb glow-primary"></div>
+  <div class="glow-orb glow-secondary"></div>
+  <div class="grain-overlay"></div>
+  <div class="vignette-overlay"></div>
+
+  <!-- Back To Top Button -->
+  <button id="btn-back-to-top" class="back-to-top-btn" aria-label="Back to top">
+    <span class="btn-arrow"><svg class="icon" aria-hidden="true"><use href="#icon-arrow-up"></use></svg></span>
+  </button>
+
+  <!-- Floating Glassmorphic Activity Ribbon (Desktop Only) -->
+  <div id="activity-ribbon" class="activity-ribbon desktop-only-ribbon">
+    <span class="ribbon-dot"></span>
+    <span id="ribbon-text" class="ribbon-text"><svg class="icon" aria-hidden="true"><use href="#icon-mic"></use></svg> Voice AI handled inbound call in Chicago (3s ago)</span>
+  </div>
+
+  <!-- Header Navigation -->
+  <header class="navbar">
+    <div class="logo">
+     <span class="logo-crop-wrapper">
+  <img src="pfp.jpeg" alt="AfterHours Logo" class="logo-3d-raw" />
+</span>
+<span class="logo-text shimmer-text">AFTERHOURS AUTOMATION</span>
+    </div>
+
+    <!-- Mobile Hamburger Toggle -->
+    <button id="mobile-menu-toggle" class="mobile-menu-btn" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="nav-links" id="nav-links-menu">
+      <a href="#workflow" class="nav-item">Workflow</a>
+      <a href="#voice-ai" class="nav-item">Voice AI Agent</a>
+      <a href="#industry" class="nav-item">Industries</a>
+      <a href="#customizer" class="nav-item">Script Studio</a>
+      <a href="#game" class="nav-item">Speed Test</a>
+      <a href="#capabilities" class="nav-item">Capabilities</a>
+      <a href="#faq" class="nav-item">FAQs</a>
+      <a href="#dashboard" class="nav-item">Console</a>
+      <a href="#pricing" class="btn btn-outline nav-btn btn-pricing-3d">
+        <span class="pulse-indicator-small"></span> Plans & Pricing
+      </a>
+      <button id="btn-open-login" class="btn btn-outline nav-btn login-nav-btn">
+        <span class="lock-icon"><svg class="icon" aria-hidden="true"><use href="#icon-lock"></use></svg></span> Client Portal
+      </button>
+      <a href="mailto:afterhoursautomation714@gmail.com?subject=Private%20Demo%20Request%20-%20AfterHours%20Automation&body=Hi%20AfterHours%20Team,%0A%0AI%20am%20interested%20in%20learning%20more%20about%20your%2024/7%20Voice%20AI%20Receptionist%20and%20autonomous%20lead%20recovery%20platform.%0A%0AMy%20Details:%0A-%20Name:%20%0A-%20Company:%20%0A-%20Phone%20Number:%20%0A-%20Estimated%20Monthly%20Inbound%20Call%20Volume:%20%0A%0ALooking%20forward%20to%20connecting!" class="btn btn-primary nav-btn">Book Demo</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero" id="hero">
+      <div class="hero-content reveal-on-scroll">
+        <div class="hero-badge">
+          <span class="pulse-indicator"></span> 24/7 Autonomous Voice AI & Lead Recovery
+        </div>
+        
+        <!-- Contextual Time-of-Day Glass Banner -->
+        <div class="time-banner" id="time-banner">
+          <span class="time-icon" id="time-icon"><svg class="icon" aria-hidden="true"><use href="#icon-moon"></use></svg></span>
+          <span class="time-text" id="time-text">Checking local system clock...</span>
+        </div>
+
+        <h1>An AI Receptionist that <span class="gradient-text">speaks & converts.</span></h1>
+        <p class="hero-subtext">
+          Never let an unanswered call or inquiry slip away. AfterHours Voice AI picks up inbound calls 24/7 in an ultra-realistic human voice, answers client questions, logs address details, schedules appointments, and fires instant WhatsApp confirmations—all synced to your CRM.
+        </p>
+        <div class="hero-actions">
+          <a href="#voice-ai" class="btn btn-shimmer-trigger magnetic-btn">Experience Voice AI</a>
+          <a href="mailto:afterhoursautomation714@gmail.com?subject=Private%20Demo%20Request%20-%20AfterHours%20Voice%20AI&body=Hi%20AfterHours%20Team,%0A%0AI%20am%20interested%20in%20testing%20your%2024/7%20AI%20Voice%20Receptionist%20for%20my%20business.%0A%0APlease%20let%20me%20know%20your%20availability%20for%20a%20private%20demo.%0A%0AMy%20Details:%0A-%20Name:%20%0A-%20Company:%20%0A-%20Phone%20Number:%20%0A-%20Estimated%20Monthly%20Call%20Volume:%20%0A%0ALooking%20forward%20to%20connecting!" class="btn btn-demo-hero magnetic-btn">Book Live Call Demo</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- WORKFLOW SECTION -->
+    <section class="workflow-section" id="workflow">
+      <div class="section-header reveal-on-scroll">
+        <div class="header-status-line">
+          <span class="section-tag">Live Autonomous Sequence</span>
+          <span class="auto-play-indicator"><span class="mini-pulse"></span> AUTO SEQUENCE VIEWPORT</span>
+        </div>
+        <h2 class="shimmer-text">Automated Call & Lead Recovery Sequence</h2>
+        <p>Watch each stage transition automatically in sequence when viewing this section, or click any stage to take manual control.</p>
+      </div>
+
+      <div class="workflow-layout reveal-on-scroll">
+        <div class="workflow-rail">
+          <div class="rail-track"><div class="rail-fill" id="rail-fill"></div></div>
+
+          <div class="step-card tilt-card active" data-step="1" id="step-node-1">
+            <div class="step-top">
+              <span class="step-id">01</span>
+              <span class="status-pill state-incoming">CALL_INBOUND_PICKUP</span>
+            </div>
+            <h3>24/7 Instant Call Pickup</h3>
+            <p>Inbound phone call is answered in under 1 ring by our realistic, conversational AI Voice Agent.</p>
+            <div class="step-hud">
+              <span>Channel: Live Voice Call</span>
+              <span class="hud-highlight">Answer Time: &lt; 1 Second</span>
+            </div>
+          </div>
+
+          <div class="step-card tilt-card" data-step="2" id="step-node-2">
+            <div class="step-top">
+              <span class="step-id">02</span>
+              <span class="status-pill state-active">HUMAN_DIALOG_INTAKE</span>
+            </div>
+            <h3>Natural Voice Dialog & Intake</h3>
+            <p>The AI Agent engages in fluent conversation, takes caller name, service needs, address, and booking preferences.</p>
+            <div class="step-hud">
+              <span>Voice Engine: Realistic Speech Flow</span>
+              <span class="hud-highlight">Response Speed: Instant</span>
+            </div>
+          </div>
+
+          <div class="step-card tilt-card" data-step="3" id="step-node-3">
+            <div class="step-top">
+              <span class="step-id">03</span>
+              <span class="status-pill state-missed">DATA_EXTRACTION</span>
+            </div>
+            <h3>Appointment Locked & Logged</h3>
+            <p>Inquiry details and appointment timestamps are structured automatically with zero human error.</p>
+            <div class="step-hud">
+              <span>Data Process: Intelligent Intake</span>
+              <span class="hud-highlight">Accuracy: 100% Verified</span>
+            </div>
+          </div>
+
+          <div class="step-card tilt-card" data-step="4" id="step-node-4">
+            <div class="step-top">
+              <span class="step-id">04</span>
+              <span class="status-pill state-sent">WHATSAPP_DISPATCH</span>
+            </div>
+            <h3>Instant WhatsApp & Email Summary</h3>
+            <p>Caller immediately receives a personalized WhatsApp confirmation text with booking summary and location pin.</p>
+            <div class="step-hud">
+              <span>Channels: WhatsApp + Email + SMS</span>
+              <span class="hud-highlight">Dispatch: Immediate</span>
+            </div>
+          </div>
+
+          <div class="step-card tilt-card" data-step="5" id="step-node-5">
+            <div class="step-top">
+              <span class="step-id">05</span>
+              <span class="status-pill state-secured">CRM_SHEET_SYNC</span>
+            </div>
+            <h3>Synced to CRM & Spreadsheets</h3>
+            <p>Lead contact card, address details, call recording, and scheduled booking sync automatically into your CRM.</p>
+            <div class="step-hud">
+              <span>CRM Status: Booked & Synced</span>
+              <span class="hud-highlight">Outcome: CONVERTED</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 24/7 VOICE AI SHOWCASE SECTION -->
+    <section class="voice-section" id="voice-ai">
+      <div class="section-header reveal-on-scroll">
+        <span class="section-tag">Next-Gen Voice Answering</span>
+        <h2 class="shimmer-text">Ultra-Fast Human-Like Voice AI Agent</h2>
+        <p>Your phone line is your biggest revenue funnel. Our Voice AI Agent picks up within 1 ring, speaks fluently in a natural human voice, collects intake details, and secures bookings 24/7/365.</p>
+      </div>
+
+      <div class="glass-card tilt-card reveal-on-scroll voice-card-container">
+        <div class="voice-grid">
+          <div>
+            <span class="status-pill state-active voice-badge">VOICE_ENGINE_24/7_ACTIVE</span>
+            <h3 class="voice-card-title">Real Conversational AI for Your Calls</h3>
+            <p class="voice-card-desc">
+              No robotic button-pressing or frustrating phone menus. Callers speak naturally—the AI listens, answers complex FAQs, collects address records, and confirms calendar appointments live on the phone.
+            </p>
+            
+            <div class="voice-feature-list">
+              <div class="voice-feature-item">
+                <span class="voice-check"><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg></span> <strong>Instant Call Pickup</strong> (Never misses a ringing call)
+              </div>
+              <div class="voice-feature-item">
+                <span class="voice-check"><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg></span> <strong>Caller Name, Phone & Address Extraction</strong>
+              </div>
+              <div class="voice-feature-item">
+                <span class="voice-check"><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg></span> <strong>Automated Calendar Scheduling & Rescheduling</strong>
+              </div>
+              <div class="voice-feature-item">
+                <span class="voice-check"><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg></span> <strong>Real-Time CRM & Google Sheets Integration</strong>
+              </div>
+              <div class="voice-feature-item">
+                <span class="voice-check"><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg></span> <strong>Automatic WhatsApp Confirmation Dispatched</strong>
+              </div>
+            </div>
+
+            <div class="more-voice-samples-box">
+              <a href="mailto:afterhoursautomation714@gmail.com?subject=Private%20Demo%20Request%20-%20Listen%20to%20More%20Voice%20AI%20Samples&body=Hi%20AfterHours%20Team,%0A%0AI%20would%20like%20to%20listen%20to%20more%20live%20Voice%20AI%20samples%20and%20request%20a%20live%20call%20demo%20for%20our%20company's%20specific%20needs.%0A%0APlease%20contact%20me%20with%20available%20slots.%0A%0AMy%20Details:%0A-%20Name:%20%0A-%20Company:%20%0A-%20Phone%20Number:%20" 
+                 class="btn btn-shimmer-trigger btn-sm more-samples-btn">
+                <svg class="icon" aria-hidden="true"><use href="#icon-mic"></use></svg> Listen to More Voice AI Samples &amp; Book Demo
+              </a>
+            </div>
+          </div>
+
+          <!-- Animated Audio Telemetry Visualizer & Voice Sample Player -->
+          <div class="voice-telemetry-box">
+            <span class="voice-telemetry-tag">LIVE VOICE AGENT PLAYER</span>
+            <div class="voice-mic-icon"><svg class="icon" aria-hidden="true"><use href="#icon-mic"></use></svg></div>
+            
+            <div class="voice-equalizer" id="voice-equalizer-bars">
+              <span class="eq-bar eq-1"></span>
+              <span class="eq-bar eq-2"></span>
+              <span class="eq-bar eq-3"></span>
+              <span class="eq-bar eq-4"></span>
+              <span class="eq-bar eq-5"></span>
+              <span class="eq-bar eq-6"></span>
+            </div>
+
+            <div class="voice-audio-player">
+              <span class="audio-player-label">PREVIEW VOICE AI SAMPLES</span>
+              <div class="sample-selector-pills">
+                <button class="sample-pill active" data-sample="dental"><svg class="icon" aria-hidden="true"><use href="#icon-stethoscope"></use></svg> Dental</button>
+                <button class="sample-pill" data-sample="hvac"><svg class="icon" aria-hidden="true"><use href="#icon-snowflake"></use></svg> HVAC</button>
+                <button class="sample-pill" data-sample="banquet"><svg class="icon" aria-hidden="true"><use href="#icon-landmark"></use></svg> Event</button>
+              </div>
+              <div class="audio-controls-row">
+                <button id="btn-play-voice-sample" class="audio-play-btn" aria-label="Play Voice Demo">
+                  <span id="play-icon">▶</span>
+                </button>
+                <div class="audio-waveform-progress">
+                  <div id="audio-progress-bar" class="audio-progress-fill"></div>
+                  <span id="sample-timer-text" class="audio-time-display">0:00 / 0:08</span>
+                </div>
+              </div>
+              <p id="sample-transcript-text" class="sample-transcript-box">
+                "Hi! Thanks for calling Apex Dental. I can get you scheduled for an emergency appointment tomorrow morning at 9:00 AM. Shall I lock that in for you?"
+              </p>
+            </div>
+
+            <span class="voice-subtext">Zero Phone Menus • Natural Human Tone</span>
+          </div>
+        </div>
+
+        <!-- LIVE SPEECH TO CRM PARSING SIMULATOR -->
+        <div class="crm-parser-wrapper">
+          <div class="section-header" style="margin-bottom: 24px;">
+            <span class="section-tag">Zero Human Error Intake</span>
+            <h3 class="shimmer-text" style="font-size: 1.6rem; font-family: var(--font-heading);">Speech-to-CRM Live Parsing Simulator</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted);">Click a call scenario to see how raw human conversation is structured into CRM fields instantly.</p>
+          </div>
+
+          <div class="parser-pills-row">
+            <button class="parser-pill active" data-scenario="hvac"><svg class="icon" aria-hidden="true"><use href="#icon-snowflake"></use></svg> Emergency AC Breakdown</button>
+            <button class="parser-pill" data-scenario="dental"><svg class="icon" aria-hidden="true"><use href="#icon-stethoscope"></use></svg> Dental Consultation</button>
+            <button class="parser-pill" data-scenario="realestate"><svg class="icon" aria-hidden="true"><use href="#icon-home"></use></svg> VIP Listing Walkthrough</button>
+          </div>
+
+          <div class="parser-grid">
+            <div class="parser-panel transcript-panel">
+              <div class="panel-tag-header">
+                <span class="mini-pulse cyan"></span>
+                <span>RAW CALL TRANSCRIPT</span>
+              </div>
+              <p id="parser-typing-text" class="parser-transcript-text">
+                "Hi, this is Sarah Connor. My AC unit completely stopped blowing cold air at 104 Park Avenue. Can someone come emergency repair it tomorrow morning?"
+              </p>
+            </div>
+
+            <div class="parser-panel crm-output-panel">
+              <div class="panel-tag-header">
+                <span class="mini-dot emerald"></span>
+                <span>STRUCTURED CRM DATA</span>
+              </div>
+              <div class="crm-fields-grid">
+                <div class="crm-field-row">
+                  <span class="f-label">Caller Name:</span>
+                  <strong class="f-val text-cyan" id="crm-val-name">Sarah Connor</strong>
+                </div>
+                <div class="crm-field-row">
+                  <span class="f-label">Service Type:</span>
+                  <strong class="f-val" id="crm-val-service">Emergency AC Repair</strong>
+                </div>
+                <div class="crm-field-row">
+                  <span class="f-label">Property Address:</span>
+                  <strong class="f-val" id="crm-val-address">104 Park Avenue</strong>
+                </div>
+                <div class="crm-field-row">
+                  <span class="f-label">Urgency Level:</span>
+                  <strong class="f-val text-red" id="crm-val-urgency">HIGH (Emergency)</strong>
+                </div>
+                <div class="crm-field-row">
+                  <span class="f-label">Booking Slot:</span>
+                  <strong class="f-val text-emerald" id="crm-val-slot">Tomorrow 8:30 AM (Confirmed)</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INDUSTRY SPECIFIC USE-CASE SELECTOR -->
+    <section class="industry-section" id="industry">
+      <div class="section-header reveal-on-scroll">
+        <span class="section-tag">Tailored Industry Workflows</span>
+        <h2 class="shimmer-text">Customized Autonomous Flows for Your Business</h2>
+        <p>Select your vertical to preview specialized AI voice calls, automated triggers, and conversion metrics.</p>
+      </div>
+
+      <div class="industry-shell reveal-on-scroll">
+        <div class="industry-tabs">
+          <button class="ind-tab active" data-ind="dental"><svg class="icon" aria-hidden="true"><use href="#icon-stethoscope"></use></svg> Dental & Healthcare</button>
+          <button class="ind-tab" data-ind="hvac"><svg class="icon" aria-hidden="true"><use href="#icon-snowflake"></use></svg> HVAC & AC Services</button>
+          <button class="ind-tab" data-ind="banquet"><svg class="icon" aria-hidden="true"><use href="#icon-landmark"></use></svg> Banquet & Event Venues</button>
+          <button class="ind-tab" data-ind="realestate"><svg class="icon" aria-hidden="true"><use href="#icon-scale"></use></svg> Real Estate & Legal</button>
+        </div>
+
+        <div class="industry-display-card tilt-card" id="ind-card">
+          <div class="ind-header-row">
+            <div>
+              <span class="ind-badge" id="ind-badge">DENTAL & HEALTHCARE</span>
+              <h3 id="ind-title">Emergency & Consultation Immediate Recovery</h3>
+            </div>
+            <div class="ind-stat-badge">
+              <span class="s-label">Est. Monthly Recovery</span>
+              <strong class="s-val text-cyan" id="ind-rec">$18,400</strong>
+            </div>
+          </div>
+
+          <p class="ind-desc" id="ind-desc">
+            When a patient calls with urgent inquiries after hours, AfterHours AI Voice answers immediately, collects symptom details, books morning consultations, and dispatches a WhatsApp booking link.
+          </p>
+
+          <div class="ind-preview-grid">
+            <div class="ind-box">
+              <span class="ind-box-label">Automated Call Trigger</span>
+              <p id="ind-cond">Inbound call picked up in &lt; 1 ring between 6:00 PM - 8:00 AM or weekend closures.</p>
+            </div>
+            <div class="ind-box ind-whatsapp-box">
+              <span class="ind-box-label">Dispatched WhatsApp Preview</span>
+              <p id="ind-msg">"Hi! Thanks for speaking with Apex Dental AI. Your emergency appointment slot is reserved for tomorrow at 9:00 AM. Location Pin: [Link]"</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHATSAPP SCRIPT CUSTOMIZER -->
+    <section class="customizer-section" id="customizer">
+      <div class="section-header reveal-on-scroll">
+        <span class="section-tag">Interactive Messaging Studio</span>
+        <h2 class="shimmer-text">Live WhatsApp Script & Tone Studio</h2>
+        <p>Type your business name and toggle tone presets to see how your automated post-call text will look on a customer's device.</p>
+      </div>
+
+      <div class="customizer-shell tilt-card reveal-on-scroll">
+        <div class="customizer-controls">
+          <div class="cust-group">
+            <label for="cust-biz-name">Your Company / Practice Name</label>
+            <input type="text" id="cust-biz-name" value="Apex Enterprises" placeholder="e.g. Apex Dental or Metro HVAC" />
+          </div>
+
+          <div class="cust-group">
+            <label>Select Automation Tone</label>
+            <div class="tone-pills">
+              <button class="tone-btn active" data-tone="friendly"><svg class="icon" aria-hidden="true"><use href="#icon-smile"></use></svg> Friendly</button>
+              <button class="tone-btn" data-tone="executive"><svg class="icon" aria-hidden="true"><use href="#icon-briefcase"></use></svg> Executive</button>
+              <button class="tone-btn" data-tone="urgent"><svg class="icon" aria-hidden="true"><use href="#icon-zap"></use></svg> Urgent / VIP</button>
+              <button class="tone-btn" data-tone="luxury"><svg class="icon" aria-hidden="true"><use href="#icon-crown"></use></svg> Luxury</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="phone-mockup">
+          <div class="phone-header">
+            <div class="phone-avatar">AH</div>
+            <div class="phone-contact">
+              <strong id="phone-contact-name">Apex Enterprises AI</strong>
+              <span>● Online & Dispatched</span>
+            </div>
+          </div>
+          <div class="phone-body">
+            <div class="chat-bubble ai-bubble">
+              <p id="whatsapp-script-text">"Hi there! Thanks for speaking with Apex Enterprises. Your appointment details and booking summary have been confirmed. Tap here to view your calendar entry: [Booking Link]"</p>
+              <span class="chat-timestamp">Just now • Delivered <svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HUMAN VS AI SPEED GAME -->
+    <section class="game-section" id="game">
+      <div class="section-header reveal-on-scroll">
+        <span class="section-tag">Response Speed Benchmark</span>
+        <h2 class="shimmer-text">Human vs. AI Reaction Speed Test</h2>
+        <p>Click "Trigger Inbound Call" and type a response to test your manual team's speed against AfterHours Voice AI's instant pickup benchmark.</p>
+      </div>
+
+      <div class="game-card tilt-card reveal-on-scroll">
+        <div class="game-top-bar">
+          <button id="btn-start-game" class="btn btn-shimmer-trigger btn-sm"><svg class="icon" aria-hidden="true"><use href="#icon-zap"></use></svg> Trigger Inbound Call</button>
+          <div class="game-timer" id="game-timer-display">0.00s</div>
+        </div>
+
+        <div class="game-workspace">
+          <textarea id="game-input" placeholder="Click 'Trigger Inbound Call' above to start the clock, then type your manual intake reply here..." disabled></textarea>
+          <button id="btn-submit-game" class="btn btn-secondary btn-sm" disabled>Send Manual Reply</button>
+        </div>
+
+        <div class="game-results hidden" id="game-results-box">
+          <div class="res-block">
+            <span class="r-label">Your Manual Speed</span>
+            <strong class="r-val text-red" id="res-human-time">0.00s</strong>
+          </div>
+          <div class="res-block">
+            <span class="r-label">AfterHours Voice AI</span>
+            <strong class="r-val text-cyan">0.80s</strong>
+          </div>
+          <div class="res-block">
+            <span class="r-label">Estimated Lead Loss Risk</span>
+            <strong class="r-val text-red" id="res-loss-pct">85% Risk</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BEFORE VS AFTER PROCESS SWITCHER -->
+    <section class="process-switcher-section" id="compare">
+      <div class="section-header reveal-on-scroll">
+        <span class="section-tag">Interactive Comparison</span>
+        <h2 class="shimmer-text">Traditional Response vs. AfterHours Voice AI</h2>
+        <p>Toggle between the old manual process and our autonomous Voice AI pipeline to see the conversion gap.</p>
+      </div>
+
+      <div class="switcher-shell reveal-on-scroll">
+        <div class="switcher-nav-row">
+          <button id="tab-before" class="switcher-tab">Traditional Loss Flow</button>
+          <button id="tab-after" class="switcher-tab active">AfterHours Voice AI Pipeline</button>
+        </div>
+
+        <div class="switcher-content-card tilt-card" id="switcher-card">
+          <div class="switcher-badge" id="switch-badge">AFTERHOURS RECOVERY PIPELINE</div>
+          <h3 id="switch-title">Instant Voice AI Call Answer & Direct Sync</h3>
+          <p id="switch-desc">Inbound call rings <svg class="icon" aria-hidden="true"><use href="#icon-arrow-right"></use></svg> Voice AI answers instantly <svg class="icon" aria-hidden="true"><use href="#icon-arrow-right"></use></svg> Collects caller name, address, and service need <svg class="icon" aria-hidden="true"><use href="#icon-arrow-right"></use></svg> WhatsApp confirmation sent & booked to CRM.</p>
+          
+          <div class="switcher-metrics-row">
+            <div class="s-metric">
+              <span class="s-label">Avg. Latency</span>
+              <span class="s-val text-cyan" id="s-val-time">&lt; 1s</span>
+            </div>
+            <div class="s-metric">
+              <span class="s-label">Answer Rate</span>
+              <span class="s-val text-cyan" id="s-val-rate">100%</span>
+            </div>
+            <div class="s-metric">
+              <span class="s-label">Competitor Leakage</span>
+              <span class="s-val text-emerald" id="s-val-leak">0%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MULTI-CURRENCY CALCULATOR -->
+    <section class="calculator-section" id="calc">
+      <div class="section-header reveal-on-scroll">
+        <span class="section-tag">Interactive Revenue Calculator</span>
+        <h2 class="shimmer-text">Calculate Your Monthly Lost Revenue</h2>
+        <p>Select your operational currency ($ USD, € EUR, or ₹ INR) and adjust sliders or use stepper buttons to estimate monthly revenue leakage.</p>
+      </div>
+
+      <div class="calc-card tilt-card reveal-on-scroll">
+        <div class="currency-toggle-row">
+          <button class="curr-btn active" data-curr="USD" data-symbol="$">$ USD</button>
+          <button class="curr-btn" data-curr="EUR" data-symbol="€">€ EUR</button>
+          <button class="curr-btn" data-curr="INR" data-symbol="₹">₹ INR</button>
+        </div>
+
+        <div class="calc-grid">
+          <div class="calc-inputs">
+            <div class="range-group">
+              <div class="range-header">
+                <label for="range-calls">Unanswered Calls Per Week</label>
+                <div class="stepper-badge-wrap">
+                  <span class="range-val-badge" id="disp-calls">15 Calls</span>
+                  <div class="stepper-btn-group">
+                    <button type="button" class="stepper-btn" id="btn-calls-down" aria-label="Decrease calls">▼</button>
+                    <button type="button" class="stepper-btn" id="btn-calls-up" aria-label="Increase calls">▲</button>
+                  </div>
+                </div>
+              </div>
+              <input type="range" id="range-calls" min="1" max="100" value="15" step="1" />
+            </div>
+
+            <div class="range-group">
+              <div class="range-header">
+                <label for="range-value">Average Customer / Deal Value</label>
+                <div class="stepper-badge-wrap">
+                  <span class="range-val-badge" id="disp-value">$50</span>
+                  <div class="stepper-btn-group">
+                    <button type="button" class="stepper-btn" id="btn-value-down" aria-label="Decrease value">▼</button>
+                    <button type="button" class="stepper-btn" id="btn-value-up" aria-label="Increase value">▲</button>
+                  </div>
+                </div>
+              </div>
+              <input type="range" id="range-value" min="10" max="5000" value="50" step="10" />
+            </div>
+          </div>
+
+          <div class="calc-result-box">
+            <span class="result-label">Estimated Monthly Revenue Leaking</span>
+            <div class="result-amount count-up" id="calc-result-val" data-value="1500" data-prefix="$" data-decimals="0">$1,500</div>
+            <span class="result-subtext">Based on average 50% recovery of high-intent missed calls.</span>
+            <button id="btn-open-loss-audit" class="btn btn-shimmer-trigger btn-sm calc-cta-btn">Export Loss Audit Report</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CAPABILITIES SECTION -->
+    <section class="capabilities-section" id="capabilities">
+      <div class="section-header reveal-on-scroll">
+        <span class="section-tag">Platform Features</span>
+        <h2 class="shimmer-text">Engineered for Zero Lead Leakage</h2>
+        <p>A continuous automation infrastructure operating 24 hours a day, 365 days a year.</p>
+      </div>
+
+      <div class="card-grid">
+        <div class="glass-card tilt-card cap-card-3d reveal-on-scroll" data-glow="cobalt">
+          <div class="card-glow"></div>
+          <div class="card-top-bar">
+            <span class="card-icon"><svg class="icon" aria-hidden="true"><use href="#icon-mic"></use></svg></span>
+            <span class="card-tech-tag">24/7 VOICE AI</span>
+          </div>
+          <h3>Human-Like AI Call Handling</h3>
+          <p>Answers incoming calls in under 1 ring. Conducts natural voice dialog, collects caller name and address, books slots, and syncs directly to spreadsheets/CRMs.</p>
+          <div class="card-status-bar">
+            <span class="mini-dot cyan"></span> Live Voice Answering Engine
+          </div>
+        </div>
+
+        <div class="glass-card tilt-card cap-card-3d reveal-on-scroll" data-glow="cyan">
+          <div class="card-glow"></div>
+          <div class="card-top-bar">
+            <span class="card-icon"><svg class="icon" aria-hidden="true"><use href="#icon-message-circle"></use></svg></span>
+            <span class="card-tech-tag">DIRECT API</span>
+          </div>
+          <h3>WhatsApp Automation</h3>
+          <p>Deliver rich, interactive WhatsApp dialogs, instant booking calendars, and FAQs directly inside chat post-call.</p>
+          <div class="card-status-bar">
+            <span class="mini-dot cyan"></span> WhatsApp Business Gateway
+          </div>
+        </div>
+
+        <div class="glass-card tilt-card cap-card-3d reveal-on-scroll" data-glow="indigo">
+          <div class="card-glow"></div>
+          <div class="card-top-bar">
+            <span class="card-icon"><svg class="icon" aria-hidden="true"><use href="#icon-mail"></use></svg></span>
+            <span class="card-tech-tag">DIRECT EMAIL</span>
+          </div>
+          <h3>Email Automation</h3>
+          <p>Dispatch high-deliverability branded introductory sequences, intake questionnaires, and scheduling links.</p>
+          <div class="card-status-bar">
+            <span class="mini-dot indigo"></span> Automated Email Delivery
+          </div>
+        </div>
+
+        <div class="glass-card tilt-card cap-card-3d reveal-on-scroll" data-glow="cobalt">
+          <div class="card-glow"></div>
+          <div class="card-top-bar">
+            <span class="card-icon"><svg class="icon" aria-hidden="true"><use href="#icon-refresh-cw"></use></svg></span>
+            <span class="card-tech-tag">CRM SYNC</span>
+          </div>
+          <h3>CRM & Sheet Integration</h3>
+          <p>Native connectors for Salesforce, HubSpot, GoHighLevel, Google Sheets, and custom Webhooks. Zero manual entry.</p>
+          <div class="card-status-bar">
+            <span class="mini-dot cyan"></span> Real-Time Sync Pipeline
+          </div>
+        </div>
+
+        <div class="glass-card tilt-card cap-card-3d reveal-on-scroll" data-glow="violet">
+          <div class="card-glow"></div>
+          <div class="card-top-bar">
+            <span class="card-icon"><svg class="icon" aria-hidden="true"><use href="#icon-brain"></use></svg></span>
+            <span class="card-tech-tag">SMART WORKFLOWS</span>
+          </div>
+          <h3>AI-Assisted Workflows</h3>
+          <p>Contextual AI models analyze incoming call transcripts and messages to summarize intent and generate smart CRM tags.</p>
+          <div class="card-status-bar">
+            <span class="mini-dot violet"></span> Intelligent Speech Evaluator
+          </div>
+        </div>
+
+        <div class="glass-card tilt-card cap-card-3d reveal-on-scroll" data-glow="emerald">
+          <div class="card-glow"></div>
+          <div class="card-top-bar">
+            <span class="card-icon"><svg class="icon" aria-hidden="true"><use href="#icon-shield"></use></svg></span>
+            <span class="card-tech-tag">DATA PRIVACY</span>
+          </div>
+          <h3>Privacy & Compliance</h3>
+          <p>Standard data encryption, privacy controls, and explicit opt-out handling engineered into every call and flow.</p>
+          <div class="card-status-bar">
+            <span class="mini-dot emerald"></span> Verified Secure Pipeline
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE FAQS ACCORDION SECTION -->
+    <section class="faq-section" id="faq">
+      <div class="section-header reveal-on-scroll">
+        <span class="section-tag">Knowledge Base</span>
+        <h2 class="shimmer-text">Frequently Asked Questions</h2>
+        <p>Everything you need to know about our 24/7 Voice AI Agent, CRM integrations, and setup process.</p>
+      </div>
+
+      <div class="faq-accordion reveal-on-scroll">
+        <div class="faq-card tilt-card">
+          <button class="faq-question-btn">
+            <span>Does the Voice AI sound like a robotic automated phone system?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer-panel">
+            <p>Not at all. Our Voice AI Agent uses ultra-fast neural speech synthesis. It speaks with natural cadence, adapts accent inflections, handles interruptions seamlessly, and conducts realistic human conversations.</p>
+          </div>
+        </div>
+
+        <div class="faq-card tilt-card">
+          <button class="faq-question-btn">
+            <span>How does the AI handle caller addresses and appointment booking?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer-panel">
+            <p>During the call, the AI asks for and verifies caller details line-by-line. It extracts names, phone numbers, addresses, and service needs, then locks the booking directly into your calendar and dispatches a WhatsApp location pin.</p>
+          </div>
+        </div>
+
+        <div class="faq-card tilt-card">
+          <button class="faq-question-btn">
+            <span>Can AfterHours integrate with my existing CRM or Google Sheets?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer-panel">
+            <p>Yes. We provide native sync pipelines for Salesforce, HubSpot, GoHighLevel, Google Sheets, and custom Webhooks. Every call recording, transcript, and lead card syncs in real time with zero manual data entry.</p>
+          </div>
+        </div>
+
+        <div class="faq-card tilt-card">
+          <button class="faq-question-btn">
+            <span>What are the monthly subscription costs and plans?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer-panel">
+            <p>Our subscription tiers are tailored to your company's monthly call and lead recovery volume. To receive a customized pricing quote for your business, simply click <strong>"Book Demo"</strong> or email us directly at <strong>afterhoursautomation714@gmail.com</strong>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY SECTION -->
+    <section class="why-section" id="why">
+      <div class="section-header reveal-on-scroll">
+        <span class="section-tag">Measurable Business Impact</span>
+        <h2 class="shimmer-text">Why Top Teams Choose AfterHours</h2>
+        <p>When leads call, every minute of delay reduces conversion rate significantly. We eliminate call waiting and response lag completely.</p>
+      </div>
+
+      <div class="why-grid-3d">
+        <div class="glass-card tilt-card reveal-on-scroll" data-glow="cobalt">
+          <div class="card-top-bar">
+            <span class="card-icon"><svg class="icon" aria-hidden="true"><use href="#icon-zap"></use></svg></span>
+            <span class="card-tech-tag">INSTANT INTENT</span>
+          </div>
+          <h3>Instant Call Pickup</h3>
+          <p>Answer prospects in under 1 ring while buying intent is at its highest point, bypassing competitor voicemail entirely.</p>
+        </div>
+
+        <div class="glass-card tilt-card reveal-on-scroll" data-glow="cyan">
+          <div class="card-top-bar">
+            <span class="card-icon"><svg class="icon" aria-hidden="true"><use href="#icon-shield"></use></svg></span>
+            <span class="card-tech-tag">LEAD RETENTION</span>
+          </div>
+          <h3>Zero Missed Opportunities</h3>
+          <p>Reclaim after-hours calls that usually slip away into competitor hands.</p>
+        </div>
+
+        <div class="glass-card tilt-card reveal-on-scroll" data-glow="indigo">
+          <div class="card-top-bar">
+            <span class="card-icon"><svg class="icon" aria-hidden="true"><use href="#icon-crown"></use></svg></span>
+            <span class="card-tech-tag">BRAND AUTHORITY</span>
+          </div>
+          <h3>Professional Perception</h3>
+          <p>Give callers immediate certainty that their inquiry is being handled with executive-level voice precision.</p>
+        </div>
+
+        <div class="glass-card tilt-card reveal-on-scroll" data-glow="violet">
+          <div class="card-top-bar">
+            <span class="card-icon"><svg class="icon" aria-hidden="true"><use href="#icon-refresh-cw"></use></svg></span>
+            <span class="card-tech-tag">24/7 OPERATION</span>
+          </div>
+          <h3>Always-On Reliability</h3>
+          <p>Constant 365-day operation with zero additional support headcount or manual receptionist overhead.</p>
+        </div>
+
+        <div class="glass-card tilt-card reveal-on-scroll stat-glass-card" data-glow="cyan">
+          <span class="stat-number count-up" data-value="1" data-prefix="&lt; " data-suffix="s">&lt; 0s</span>
+          <span class="stat-label">Average Call Pickup Time</span>
+        </div>
+
+        <div class="glass-card tilt-card reveal-on-scroll stat-glass-card" data-glow="emerald">
+          <span class="stat-number count-up" data-value="100" data-decimals="0" data-suffix="%">0%</span>
+          <span class="stat-label">Inbound Call Handling Rate</span>
+        </div>
+
+        <div class="glass-card tilt-card reveal-on-scroll stat-glass-card" data-glow="indigo">
+          <span class="stat-number count-up" data-value="3.8" data-decimals="1" data-suffix="x">0.0x</span>
+          <span class="stat-label">Conversion Rate Multiplication</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- DASHBOARD CONSOLE & SIMULATOR -->
+    <section class="dashboard-section" id="dashboard">
+      <div class="section-header reveal-on-scroll">
+        <span class="section-tag">Control Console</span>
+        <h2 class="shimmer-text">Unified Command Center</h2>
+        <p>Live oversight monitoring automated triggers, voice call conduits, and CRM status.</p>
+      </div>
+
+      <div class="dashboard-shell reveal-on-scroll">
+        <div class="dash-bar">
+          <div class="dash-status">
+            <span class="status-dot"></span> System Status: <strong class="text-cyan">ONLINE & READY</strong>
+          </div>
+          <div class="dash-mode" id="console-mode-tag">Mode: Voice AI Interactive Simulator</div>
+        </div>
+
+        <div class="dash-metrics">
+          <div class="metric-card">
+            <span class="m-label">Leads Recovered</span>
+            <span class="m-value count-up" id="val-leads" data-value="142">0</span>
+          </div>
+          <div class="metric-card">
+            <span class="m-label">Calls Handled</span>
+            <span class="m-value count-up" id="val-calls" data-value="189">0</span>
+          </div>
+          <div class="metric-card">
+            <span class="m-label">WhatsApp Dispatched</span>
+            <span class="m-value count-up" id="val-whatsapp" data-value="176">0</span>
+          </div>
+          <div class="metric-card">
+            <span class="m-label">Emails Delivered</span>
+            <span class="m-value count-up" id="val-emails" data-value="158">0</span>
+          </div>
+        </div>
+
+        <div class="dash-main-split">
+          <div class="dash-panel">
+            <h4>Live Automation Activity Feed</h4>
+            <div class="activity-feed" id="activity-feed"></div>
+          </div>
+
+          <div class="dash-panel">
+            <h4>Live Interactive Voice AI Simulator</h4>
+            <div class="sim-form-box">
+              <label class="sim-label" for="sim-phone">Test Inbound Call Trigger</label>
+              <div class="sim-input-row">
+                <input type="text" id="sim-phone" value="+1 (555) 019-2831" placeholder="Enter Contact / Phone..." />
+                <button class="btn btn-shimmer-trigger btn-sm" id="btn-trigger-sim">Test Trigger</button>
+              </div>
+            </div>
+            
+            <div class="ai-console">
+              <div class="ai-msg msg-in">
+                <span class="msg-type">Simulated Inbound Call</span>
+                <p id="sim-inbound-text">Inbound call received from +1 (555) 019-2831 outside operating hours.</p>
+              </div>
+              <div class="ai-msg msg-ai">
+                <span class="msg-type type-ai">Voice AI Agent Response</span>
+                <p id="sim-outbound-text">"Hello! Thanks for calling Apex Enterprises. I am your 24/7 AI Receptionist. I can answer your questions and book a consultation for you right now."</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PLANS & PRICING CONTAINER -->
+   <!-- PLANS & PRICING CONTAINER -->
+    <section class="pricing-section" id="pricing">
+      <div class="section-header reveal-on-scroll">
+        <span class="section-tag">Autonomous Capacity Tiers</span>
+        <h2 class="shimmer-text">Select Your Automation Scale</h2>
+        <p>Shared credit wallets engineered for 24/7 Voice AI answering, instant WhatsApp dispatch, and CRM sync.</p>
+      </div>
+
+      <!-- 3 MAIN SUBSCRIPTION TIERS -->
+      <div class="pricing-cards-grid reveal-on-scroll">
+        
+        <!-- TIER 1: STARTER SETUP -->
+        <div class="pricing-card tilt-card" data-plan="starter">
+          <div class="pricing-card-header">
+            <span class="pricing-plan-badge">ESSENTIAL DISPATCH</span>
+            <h3 class="pricing-plan-name">Starter Setup</h3>
+            <div class="pricing-price-wrap">
+              <span class="pricing-currency">₹</span>
+              <span class="pricing-amount">5,000</span>
+              <span class="pricing-period">/ mo</span>
+            </div>
+            <span class="pricing-setup-fee">+ ₹3,000 One-Time Engineering &amp; Deployment</span>
+          </div>
+
+          <div class="pricing-credit-highlight">
+            <div class="credit-metric-row">
+              <span class="credit-num">5,000</span>
+              <span class="credit-unit">Credits / Mo</span>
+            </div>
+            <span class="credit-label">Shared Voice &amp; WhatsApp Wallet</span>
+          </div>
+
+          <ul class="pricing-features">
+            <li><span class="feat-check"><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg></span> <span><strong>~200 Mins</strong> Voice AI (&gt;20s at 25 creds/min)</span></li>
+            <li><span class="feat-check"><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg></span> <span><strong>Up to 1,000 Inbound Calls</strong> (&le; 20s at 5 creds)</span></li>
+            <li><span class="feat-check"><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg></span> <span><strong>500 WhatsApp Flows</strong> (10 creds/flow)</span></li>
+            <li><span class="feat-check"><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg></span> <span><strong>&lt; 1s Call Pickup</strong> (Human conversational tone)</span></li>
+            <li><span class="feat-check"><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg></span> <span><strong>Google Sheets &amp; Webhook Mesh Sync</strong></span></li>
+            <li><span class="feat-check"><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg></span> <span><strong>Sub-20 Safety Lockout Guard</strong> (Zero mid-call drops)</span></li>
+          </ul>
+
+          <div class="pricing-cta-wrap">
+            <button class="btn btn-secondary pricing-buy-btn" data-sku="sub_starter" data-base="8000">
+              <span class="btn-text">Deploy Starter Tier</span>
+              <span class="btn-arrow"><svg class="icon" aria-hidden="true"><use href="#icon-arrow-right"></use></svg></span>
+            </button>
+            <span class="billing-clarity-note">Billed at checkout • Deployment + Month 1</span>
+          </div>
+        </div>
+
+        <!-- TIER 2: GROWTH PIPELINE (MOST POPULAR) -->
+        <div class="pricing-card tilt-card featured-plan" data-plan="growth">
+          <div class="popular-ribbon">
+            <span class="ribbon-glow-dot"></span> MOST POPULAR PIPELINE
+          </div>
+          <div class="pricing-card-header">
+            <span class="pricing-plan-badge gold">GROWTH ACCELERATOR</span>
+            <h3 class="pricing-plan-name">Growth Pipeline</h3>
+            <div class="pricing-price-wrap">
+              <span class="pricing-currency text-cyan">₹</span>
+              <span class="pricing-amount text-cyan">10,000</span>
+              <span class="pricing-period">/ mo</span>
+            </div>
+            <span class="pricing-setup-fee">+ ₹6,000 One-Time Engineering &amp; Deployment</span>
+          </div>
+
+          <div class="pricing-credit-highlight featured-credit">
+            <div class="credit-metric-row">
+              <span class="credit-num text-cyan">10,000</span>
+              <span class="credit-unit text-cyan">Credits / Mo</span>
+            </div>
+            <span class="credit-label">High-Volume Operational Wallet</span>
+          </div>
+
+          <ul class="pricing-features">
+            <li><span class="feat-check text-cyan"><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg></span> <span><strong>~400 Mins</strong> Voice AI (&gt;20s at 25 creds/min)</span></li>
+            <li><span class="feat-check text-cyan"><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg></span> <span><strong>Up to 2,000 Inbound Calls</strong> (&le; 20s at 5 creds)</span></li>
+            <li><span class="feat-check text-cyan"><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg></span> <span><strong>1,000 WhatsApp Booking Flows</strong> (10 creds/flow)</span></li>
+            <li><span class="feat-check text-cyan"><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg></span> <span><strong>Structured Intake Extraction</strong> (Address, Urgency, Slot)</span></li>
+            <li><span class="feat-check text-cyan"><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg></span> <span><strong>Priority Neural Voice Latency Tuning</strong></span></li>
+            <li><span class="feat-check text-cyan"><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg></span> <span><strong>Bi-Directional CRM &amp; Sheets Live Bridge</strong></span></li>
+            <li><span class="feat-check text-cyan"><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg></span> <span><strong>Sub-20 Safety Lockout Guard Active</strong></span></li>
+          </ul>
+
+          <div class="pricing-cta-wrap">
+            <button class="btn btn-shimmer-trigger pricing-buy-btn" data-sku="sub_growth" data-base="16000">
+              <span class="btn-text">Deploy Growth Pipeline</span>
+              <span class="btn-arrow"><svg class="icon" aria-hidden="true"><use href="#icon-arrow-right"></use></svg></span>
+            </button>
+            <span class="billing-clarity-note">Billed at checkout • Deployment + Month 1</span>
+          </div>
+        </div>
+
+        <!-- TIER 3: ENTERPRISE MESH -->
+        <div class="pricing-card tilt-card" data-plan="enterprise">
+          <div class="pricing-card-header">
+            <span class="pricing-plan-badge">ENTERPRISE SCALE</span>
+            <h3 class="pricing-plan-name">Enterprise Mesh</h3>
+            <div class="pricing-price-wrap">
+              <span class="pricing-currency">₹</span>
+              <span class="pricing-amount">20,000</span>
+              <span class="pricing-period">/ mo</span>
+            </div>
+            <span class="pricing-setup-fee">+ ₹8,000 Dedicated Engineering Architecture</span>
+          </div>
+
+          <div class="pricing-credit-highlight">
+            <div class="credit-metric-row">
+              <span class="credit-num">20,000</span>
+              <span class="credit-unit">Credits / Mo</span>
+            </div>
+            <span class="credit-label">Enterprise Concurrency Reserve</span>
+          </div>
+
+          <ul class="pricing-features">
+            <li><span class="feat-check"><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg></span> <span><strong>~800 Mins</strong> Voice AI (&gt;20s at 25 creds/min)</span></li>
+            <li><span class="feat-check"><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg></span> <span><strong>Up to 4,000 Inbound Calls</strong> (&le; 20s at 5 creds)</span></li>
+            <li><span class="feat-check"><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg></span> <span><strong>2,000 WhatsApp Rich Intake Flows</strong> (10 creds/flow)</span></li>
+            <li><span class="feat-check"><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg></span> <span><strong>Custom Brand Voice Accent &amp; Tone Cloning</strong></span></li>
+            <li><span class="feat-check"><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg></span> <span><strong>High-Volume Concurrent Line Routing</strong></span></li>
+            <li><span class="feat-check"><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg></span> <span><strong>Custom Multi-Agent CRM Hand-off Webhooks</strong></span></li>
+            <li><span class="feat-check"><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg></span> <span><strong>Dedicated 24/7 Priority Tech Support</strong></span></li>
+          </ul>
+
+          <div class="pricing-cta-wrap">
+            <button class="btn btn-secondary pricing-buy-btn" data-sku="sub_enterprise" data-base="28000">
+              <span class="btn-text">Deploy Enterprise Mesh</span>
+              <span class="btn-arrow"><svg class="icon" aria-hidden="true"><use href="#icon-arrow-right"></use></svg></span>
+            </button>
+            <span class="billing-clarity-note">Billed at checkout • Deployment + Month 1</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ON-DEMAND CREDIT TOP-UP SECTION -->
+      <div class="topup-wrapper reveal-on-scroll">
+        <div class="topup-header">
+          <span class="topup-badge">ON-DEMAND RUNTIME INJECTION</span>
+          <h3 class="shimmer-text">Instant Credit Top-Up Packs</h3>
+          <p>Never run dry. Top-up packs inject instant credits directly into your live shared wallet balance.</p>
+        </div>
+
+        <div class="topup-grid">
+          <!-- TOPUP 1 -->
+          <div class="topup-card tilt-card">
+            <div class="topup-pill">MICRO BUFFER</div>
+            <div class="topup-price-box">
+              <span class="t-curr">₹</span>
+              <span class="t-val">1,000</span>
+            </div>
+            <div class="topup-credits">
+              <strong>1,000</strong> Credits
+            </div>
+            <p class="topup-subtext">~40 Voice Mins or 100 WhatsApp Flows. Ideal buffer to avoid the 20-credit safety lockout.</p>
+            <button class="btn btn-secondary topup-buy-btn" data-sku="topup_1k" data-base="1000">
+              Top Up ₹1,000
+            </button>
+          </div>
+
+          <!-- TOPUP 2 -->
+          <div class="topup-card tilt-card featured-topup">
+            <div class="topup-pill gold">SURGE BOOSTER</div>
+            <div class="topup-price-box">
+              <span class="t-curr text-cyan">₹</span>
+              <span class="t-val text-cyan">2,500</span>
+            </div>
+            <div class="topup-credits">
+              <strong class="text-cyan">2,500</strong> Credits
+            </div>
+            <p class="topup-subtext">~100 Voice Mins or 250 WhatsApp Flows. Perfect for seasonal traffic spikes and weekend coverage.</p>
+            <button class="btn btn-shimmer-trigger topup-buy-btn" data-sku="topup_2k5" data-base="2500">
+              Top Up ₹2,500
+            </button>
+          </div>
+
+          <!-- TOPUP 3 -->
+          <div class="topup-card tilt-card">
+            <div class="topup-pill">HIGH SURGE • +10% BONUS</div>
+            <div class="topup-price-box">
+              <span class="t-curr">₹</span>
+              <span class="t-val">5,000</span>
+            </div>
+            <div class="topup-credits">
+              <strong>5,500</strong> Credits
+            </div>
+            <p class="topup-subtext">~220 Voice Mins or 550 WhatsApp Flows. Includes 500 bonus credits for heavy dispatch pipelines.</p>
+            <button class="btn btn-secondary topup-buy-btn" data-sku="topup_5k" data-base="5000">
+              Top Up ₹5,000
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA SECTION -->
+    <section class="cta-section" id="contact">
+      <div class="cta-card tilt-card reveal-on-scroll">
+        <h2 class="shimmer-text">Let’s make every call count.</h2>
+        <p>Stop leaving ringing phone lines to chance. Upgrade your business with 24/7 autonomous Voice AI today.</p>
+        <div class="cta-actions">
+          <a href="mailto:afterhoursautomation714@gmail.com?subject=Private%20Demo%20Request%20-%20AfterHours%20Automation&body=Hi%20AfterHours%20Team,%0A%0AI%20am%20interested%20in%20learning%20more%20about%20your%2024/7%20AI%20Voice%20Receptionist%20and%20how%20it%20can%20integrate%20with%20my%20business.%0A%0APlease%20let%20me%20know%20your%20availability%20for%20a%20private%20demo.%0A%0AMy%20Details:%0A-%20Name:%20%0A-%20Company:%20%0A-%20Phone%20Number:%20%0A-%20Estimated%20Monthly%20Call%20Volume:%20%0A%0ALooking%20forward%20to%20connecting!" class="btn btn-primary btn-lg magnetic-btn">Book a Private Demo</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- RaSH CHATBOT WIDGET -->
+  <div id="ai-chat-widget" class="ai-chat-widget">
+    <button id="ai-chat-toggle" class="ai-chat-toggle" aria-label="Open RaSH Assistant">
+      <svg class="rash-btn-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="rash-knot-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ffffff" />
+            <stop offset="50%" stop-color="#e4e4e7" />
+            <stop offset="100%" stop-color="#45454a" />
+          </linearGradient>
+        </defs>
+        <path d="M 30 50 C 30 32, 45 32, 50 50 C 55 68, 70 68, 70 50 C 70 32, 55 32, 50 50 C 45 68, 30 68, 30 50 Z"
+              stroke="url(#rash-knot-grad)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+        <circle cx="50" cy="50" r="4" fill="#ffffff" />
+      </svg>
+      <span class="toggle-text">RaSH</span>
+      <span class="toggle-pulse"></span>
+    </button>
+
+    <div id="ai-chat-window" class="ai-chat-window hidden">
+      <div class="chat-window-header">
+        <div class="bot-info">
+          <span class="mini-pulse cyan"></span>
+          <strong>RaSH Assistant</strong>
+        </div>
+        <button id="ai-chat-close" class="chat-close-btn">×</button>
+      </div>
+
+      <div class="chat-window-body" id="chat-msg-container">
+        <div class="bot-chat-msg">
+          <span class="bot-tag">RaSH <svg class="icon" aria-hidden="true"><use href="#icon-zap"></use></svg></span>
+          <p>Hello! I am RaSH, your 24/7 lead recovery guide. Ask me about our 24/7 Voice AI Agent, roast my circuits, ask for a joke, or chat with me about saving missed calls!</p>
+        </div>
+      </div>
+
+      <div class="chat-prompt-chips">
+<button class="chip-btn" data-query="How does Voice AI Agent work?"><svg class="icon" aria-hidden="true"><use href="#icon-mic"></use></svg> Voice AI Agent?</button>
+<button class="chip-btn" data-query="How does WhatsApp Automation work?"><svg class="icon" aria-hidden="true"><use href="#icon-message-circle"></use></svg> WhatsApp Automation?</button>
+<button class="chip-btn" data-query="How does Email Automation work?"><svg class="icon" aria-hidden="true"><use href="#icon-mail"></use></svg> Email Automation?</button>
+<button class="chip-btn" data-query="How does CRM Sync work?"><svg class="icon" aria-hidden="true"><use href="#icon-refresh-cw"></use></svg> CRM Sync?</button>
+<button class="chip-btn" data-query="What are your Plans and Pricing?"><svg class="icon" aria-hidden="true"><use href="#icon-wallet"></use></svg> Plans &amp; Pricing?</button>
+<button class="chip-btn" data-query="Who are the founders?"><svg class="icon" aria-hidden="true"><use href="#icon-crown"></use></svg> Founders?</button>
+<button class="chip-btn" data-query="Tell me a joke"><svg class="icon" aria-hidden="true"><use href="#icon-laugh"></use></svg> Tell a Joke</button>
+      </div>
+
+      <div class="chat-window-input">
+        <input type="text" id="chat-user-input" placeholder="Chat with RaSH or ask a question..." />
+        <button id="chat-send-btn" class="chat-send-btn">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLIENT PORTAL LOGIN MODAL -->
+  <div id="login-modal" class="modal-backdrop hidden">
+    <div class="modal-card tilt-card">
+      <button id="btn-close-modal" class="modal-close-btn" aria-label="Close modal">×</button>
+      
+      <div class="modal-header">
+        <span class="modal-badge">CLIENT AUTHENTICATION</span>
+        <h3>Access Command Console</h3>
+        <p>Enter your authorized account email and password to access live metrics.</p>
+      </div>
+
+      <form id="login-form" onsubmit="return false;">
+        <div class="form-group">
+          <label for="login-email">Authorized Work Email</label>
+          <input type="email" id="login-email" placeholder="name@company.com" required />
+        </div>
+
+        <div class="form-group">
+          <label for="login-password">Portal Password</label>
+          <input type="password" id="login-password" placeholder="••••••••••••" required />
+        </div>
+
+        <div class="form-options">
+          <label class="remember-me">
+            <input type="checkbox" checked /> Remember session
+          </label>
+          <a href="#" onclick="alert('Password reset instructions sent to registered account administrator.'); return false;" class="forgot-link">Forgot password?</a>
+        </div>
+
+        <button type="submit" id="btn-submit-login" class="btn btn-shimmer-trigger modal-submit-btn">
+          Authenticate & Launch
+        </button>
+
+        <div id="login-error-msg" class="login-error-text hidden"></div>
+
+        <div class="modal-footer-note">
+          <span class="mini-dot cyan"></span> Secure Client Portal Bridge
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- EXIT-INTENT DEMO MODAL -->
+  <div id="exit-modal" class="modal-backdrop hidden">
+    <div class="modal-card tilt-card exit-modal-card">
+      <button id="btn-close-exit-modal" class="modal-close-btn" aria-label="Close modal">×</button>
+      
+      <div class="modal-header">
+        <span class="modal-badge">BEFORE YOU GO</span>
+        <h3 style="font-family: var(--font-heading); font-size: 1.8rem; margin-top: 6px;">Don't Leave Ringing Lines Behind</h3>
+        <p style="margin-top: 10px;">Upgrade your phone funnel with a 24/7 Voice AI Agent that answers calls in under 1 ring and locks in bookings.</p>
+      </div>
+
+      <div class="exit-modal-actions">
+        <a href="mailto:afterhoursautomation714@gmail.com?subject=Private%20Demo%20Request%20-%20Exit%20Intent&body=Hi%20AfterHours%20Team,%0A%0AI%20would%20like%20to%20request%20a%20private%20demo%20of%20your%2024/7%20Voice%20AI%20Agent.%0A%0AMy%20Details:%0A-%20Name:%20%0A-%20Company:%20%0A-%20Phone%20Number:%20" class="btn btn-shimmer-trigger btn-sm exit-cta-btn">Book Free Voice AI Demo</a>
+        <button id="btn-dismiss-exit" class="btn btn-secondary btn-sm">Explore More First</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- REVENUE LOSS AUDIT MODAL -->
+  <div id="loss-audit-modal" class="modal-backdrop hidden">
+    <div class="modal-card tilt-card audit-modal-card">
+      <button id="btn-close-audit-modal" class="modal-close-btn" aria-label="Close modal">×</button>
+      
+      <div class="modal-header">
+        <span class="modal-badge">REVENUE AUDIT</span>
+        <h3>Executive Revenue Loss Audit</h3>
+        <p>Real-time projection generated from your operational inquiry volume.</p>
+      </div>
+
+      <div class="audit-report-body" id="audit-report-content">
+        <div class="audit-summary-grid">
+          <div class="audit-stat-box">
+            <span class="a-label">Monthly Leakage</span>
+            <strong class="a-val text-red" id="audit-monthly">$1,500</strong>
+          </div>
+          <div class="audit-stat-box">
+            <span class="a-label">Annual Projected Loss</span>
+            <strong class="a-val text-red" id="audit-yearly">$18,000</strong>
+          </div>
+          <div class="audit-stat-box">
+            <span class="a-label">5-Year Cumulative Leak</span>
+            <strong class="a-val text-red" id="audit-5yr">$90,000</strong>
+          </div>
+        </div>
+
+        <div class="audit-breakdown-bar-box">
+          <span class="a-sublabel">Recoverable Pipeline Potential with Voice AI (85% Yield):</span>
+          <div class="audit-progress-track">
+            <div class="audit-progress-fill" id="audit-yield-fill" style="width: 85%;"></div>
+          </div>
+          <span class="audit-yield-text" id="audit-yield-val">$15,300 / Year Recovered</span>
+        </div>
+      </div>
+
+      <div class="audit-modal-actions">
+        <button id="btn-print-audit" class="btn btn-secondary btn-sm"><svg class="icon" aria-hidden="true"><use href="#icon-printer"></use></svg> Print / Save PDF Audit</button>
+        <a href="#contact" class="btn btn-shimmer-trigger btn-sm" onclick="document.getElementById('loss-audit-modal').classList.add('hidden');">Lock In Recovery Plan</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <p class="footer-credit">Engineered with precision by <a href="https://www.linkedin.com/in/rangesh-mishra-281557408" target="_blank" rel="noopener" class="footer-link-highlight">Rangesh</a> &amp; <a href="https://www.linkedin.com/in/shubham-mahmia-44875826a" target="_blank" rel="noopener" class="footer-link-highlight">Shubham</a>.</p>
+      <p>&copy; 2026 AfterHours Automation Inc. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="api-config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

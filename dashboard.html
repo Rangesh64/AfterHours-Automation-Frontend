@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AfterHours Automation | Executive Client Console</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2300f0ff'/%3E%3Cstop offset='50%25' stop-color='%233b82f6'/%3E%3Cstop offset='100%25' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='%2302040a'/%3E%3Cpath d='M 30 50 C 30 32, 45 32, 50 50 C 55 68, 70 68, 70 50 C 70 32, 55 32, 50 50 C 45 68, 30 68, 30 50 Z' stroke='url(%23g)' stroke-width='8' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Ccircle cx='50' cy='50' r='4' fill='%2300f0ff'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* In-Page Multi-Tab View Styles */
+    .tab-view {
+      display: none;
+      animation: fadeInView 0.35s ease-in-out forwards;
+    }
+    .tab-view.active-view {
+      display: block;
+    }
+    @keyframes fadeInView {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .sidebar-menu .sidebar-item.active {
+      background: rgba(197, 155, 39, 0.15);
+      border-left: 3px solid #c59b27;
+      color: #c59b27 !important;
+    }
+  </style>
+</head>
+<body class="dashboard-body luxury-marble-bg">
+
+  <!-- Subtle Gold Ambient Highlight -->
+  <div class="glow-orb luxury-gold-orb"></div>
+
+  <!-- Royal Header -->
+  <header class="navbar luxury-dash-nav">
+    <div class="logo">
+      <svg class="logo-knot-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="luxury-knot-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#21150c" />
+            <stop offset="50%" stop-color="#8c5319" />
+            <stop offset="100%" stop-color="#c59b27" />
+          </linearGradient>
+        </defs>
+        <path d="M 30 50 C 30 32, 45 32, 50 50 C 55 68, 70 68, 70 50 C 70 32, 55 32, 50 50 C 45 68, 30 68, 30 50 Z" 
+              stroke="url(#luxury-knot-grad)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+        <circle cx="50" cy="50" r="4" fill="#c59b27" />
+      </svg>
+      <span class="logo-text luxury-brand-text">AFTERHOURS <span class="bronze-accent">EXECUTIVE</span></span>
+    </div>
+
+    <!-- User Controls with 3D Flipping Coin Badge -->
+    <div class="dash-user-controls">
+      <div class="luxury-coin-badge-container">
+        <div class="ah-coin-scene">
+          <div class="ah-coin">
+            <div class="coin-face coin-front">A</div>
+            <div class="coin-face coin-back">H</div>
+          </div>
+        </div>
+        <div class="credit-badge-text">
+          <strong id="nav-credit-balance">5,000</strong> <span>Credits</span>
+        </div>
+      </div>
+
+      <div class="luxury-session-badge">
+        <span class="bronze-dot"></span>
+        <span id="user-display-email" class="luxury-email">admin@enterprise.com</span>
+      </div>
+      <button id="btn-logout" class="btn btn-luxury-outline btn-sm">Sign Out</button>
+    </div>
+  </header>
+
+  <div class="dashboard-wrapper">
+    <!-- Executive Sidebar -->
+    <aside class="dash-sidebar luxury-sidebar">
+      <nav class="sidebar-menu">
+        <a href="#overview" data-tab="view-overview" class="sidebar-item active"><span class="nav-icon">⚡</span> Executive Overview</a>
+        <a href="#logs" data-tab="view-logs" class="sidebar-item"><span class="nav-icon">📞</span> Intercepted Leads</a>
+        <a href="#whatsapp" data-tab="view-whatsapp" class="sidebar-item"><span class="nav-icon">💬</span> WhatsApp Logs</a>
+        <a href="#email" data-tab="view-email" class="sidebar-item"><span class="nav-icon">✉️</span> Email Sequences</a>
+        <a href="#subscription" data-tab="view-subscription" class="sidebar-item"><span class="nav-icon">💎</span> Manage Subscription</a>
+        <a href="#integrations" data-tab="view-integrations" class="sidebar-item"><span class="nav-icon">⚙️</span> Mesh Connectors</a>
+      </nav>
+      
+      <div class="sidebar-footer-card luxury-footer-card">
+        <span class="luxury-badge" id="sub-sidebar-badge">ENTERPRISE TIER</span>
+        <p id="sub-sidebar-days">242 Days Remaining</p>
+      </div>
+    </aside>
+
+    <!-- Main Content Workspace -->
+    <main class="dash-main-content">
+      <div class="dash-header-row">
+        <div>
+          <span class="luxury-tag">PRIVATE EXECUTIVE CONSOLE</span>
+          <h2 class="luxury-title" id="view-title">Autonomous Lead Portfolio</h2>
+        </div>
+        <div class="status-chip-luxury">
+          <span class="live-dot-bronze"></span> SYSTEM STATUS: ACTIVE
+        </div>
+      </div>
+
+      <!-- ==================== TAB 1: EXECUTIVE OVERVIEW ==================== -->
+      <div id="view-overview" class="tab-view active-view">
+        <!-- Metric Tiles Grid -->
+        <div class="dash-metrics" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+          <div class="metric-card luxury-card credit-balance-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <span class="m-label" style="margin-bottom: 0;">AH Available Credits</span>
+              <div class="ah-coin-scene" style="width: 26px; height: 26px;">
+                <div class="ah-coin">
+                  <div class="coin-face coin-front" style="font-size: 0.85rem;">A</div>
+                  <div class="coin-face coin-back" style="font-size: 0.85rem;">H</div>
+                </div>
+              </div>
+            </div>
+            <span class="m-value text-espresso count-up" id="metric-credit-balance" data-value="5000">5000</span>
+            <span class="m-sub text-bronze" id="credit-status-badge">● Real-Time Deduction Active</span>
+          </div>
+          <div class="metric-card luxury-card">
+            <span class="m-label">Leads Recovered</span>
+            <span class="m-value text-espresso count-up" data-value="142">0</span>
+            <span class="m-sub text-bronze" id="monthly-yield-badge">▲ +18.4% Monthly Yield</span>
+          </div>
+          <div class="metric-card luxury-card">
+            <span class="m-label">Inquiries Intercepted</span>
+            <span class="m-value count-up" data-value="189">0</span>
+            <span class="m-sub text-espresso" id="response-rate-badge">100% Sub-Second Response</span>
+          </div>
+          <div class="metric-card luxury-card">
+            <span class="m-label">WhatsApp Dispatched</span>
+            <span class="m-value count-up" data-value="176">0</span>
+            <span class="m-sub text-bronze" id="engagement-rate-badge">98.2% Direct Engagement</span>
+          </div>
+          <div class="metric-card luxury-card">
+            <span class="m-label">Pipeline Value Protected</span>
+            <span class="m-value text-espresso count-up" data-value="28400" data-prefix="$" data-decimals="0">$0</span>
+            <span class="m-sub text-bronze">Estimated Portfolio Revenue</span>
+          </div>
+        </div>
+
+        <!-- Main Activity Split -->
+        <div class="dash-main-split">
+          <!-- Live Lead Stream Table -->
+          <div class="dash-panel luxury-panel">
+            <div class="panel-header-flex">
+              <h4 class="luxury-panel-title">Recent Intercept Stream</h4>
+              <span class="hud-code-luxury">CHANNEL: LIVE MULTI-ROUTE</span>
+            </div>
+            <div class="table-container">
+              <table class="dash-table luxury-table">
+                <thead>
+                  <tr>
+                    <th>Lead Contact ID</th>
+                    <th>Intercept Time</th>
+                    <th>Dispatched Channels</th>
+                    <th>Outcome</th>
+                  </tr>
+                </thead>
+                <tbody id="intercept-log-tbody">
+                  <!-- Dynamic Supabase/Backend rows render here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Integration Connectors Preview -->
+          <div class="dash-panel luxury-panel">
+            <div class="panel-header-flex">
+              <h4 class="luxury-panel-title">Active Mesh Connections</h4>
+              <span class="hud-code-luxury">SECURITY: VERIFIED BRIDGE</span>
+            </div>
+            <div class="integration-list">
+              <div class="integ-item luxury-integ">
+                <div class="integ-info">
+                  <strong class="text-espresso">Live Voice Listener Gateway</strong>
+                  <span>Sub-Second Response Pipeline</span>
+                </div>
+                <span class="status-pill state-secured-luxury">ACTIVE</span>
+              </div>
+              <div class="integ-item luxury-integ">
+                <div class="integ-info">
+                  <strong class="text-espresso">WhatsApp Business API</strong>
+                  <span>Direct Interactive Message Bridge</span>
+                </div>
+                <span class="status-pill state-secured-luxury">ACTIVE</span>
+              </div>
+              <div class="integ-item luxury-integ">
+                <div class="integ-info">
+                  <strong class="text-espresso">Salesforce / HubSpot CRM</strong>
+                  <span>Real-Time Webhook Pipeline</span>
+                </div>
+                <span class="status-pill state-secured-luxury">SYNC ON</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== TAB 2: INTERCEPTED LEADS (CALLS) ==================== -->
+      <div id="view-logs" class="tab-view">
+        <div class="dash-panel luxury-panel">
+          <div class="panel-header-flex">
+            <div>
+              <h4 class="luxury-panel-title-large">Voice AI Call Intercept Logs</h4>
+              <p class="sub-card-desc">Detailed breakdown of inbound calls intercepted and converted by Voice AI.</p>
+            </div>
+            <span class="hud-code-luxury">CHANNEL: VOICE_CALL_STREAM</span>
+          </div>
+          <div class="table-container" style="margin-top: 20px;">
+            <table class="dash-table luxury-table">
+              <thead>
+                <tr>
+                  <th>Caller ID / Number</th>
+                  <th>Call Duration</th>
+                  <th>Call Summary / Intake</th>
+                  <th>Time Intercepted</th>
+                  <th>Call Status</th>
+                </tr>
+              </thead>
+              <tbody id="voice-logs-tbody">
+                <tr>
+                  <td><strong>+1 (555) 234-8901</strong></td>
+                  <td>1m 42s</td>
+                  <td>Requested emergency AC repair service for tomorrow morning.</td>
+                  <td>12 mins ago</td>
+                  <td><span class="status-pill state-secured-luxury">BOOKED</span></td>
+                </tr>
+                <tr>
+                  <td><strong>+1 (555) 876-1122</strong></td>
+                  <td>2m 15s</td>
+                  <td>Inquired about dental emergency slot; booked 9:00 AM.</td>
+                  <td>45 mins ago</td>
+                  <td><span class="status-pill state-secured-luxury">CONFIRMED</span></td>
+                </tr>
+                <tr>
+                  <td><strong>+1 (555) 901-4433</strong></td>
+                  <td>0m 58s</td>
+                  <td>Asked for banquet hall tour dates & luxury pricing PDF.</td>
+                  <td>2 hours ago</td>
+                  <td><span class="status-pill state-sent-luxury">INFO SENT</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== TAB 3: WHATSAPP LOGS ==================== -->
+      <div id="view-whatsapp" class="tab-view">
+        <div class="dash-panel luxury-panel">
+          <div class="panel-header-flex">
+            <div>
+              <h4 class="luxury-panel-title-large">WhatsApp Interactive Dispatch Logs</h4>
+              <p class="sub-card-desc">Real-time confirmation dispatches & automated interactive messages sent to callers.</p>
+            </div>
+            <span class="hud-code-luxury">GATEWAY: WA_BUSINESS_DIRECT</span>
+          </div>
+          <div class="table-container" style="margin-top: 20px;">
+            <table class="dash-table luxury-table">
+              <thead>
+                <tr>
+                  <th>Recipient Phone</th>
+                  <th>Message Template Dispatched</th>
+                  <th>Initial Dispatch Time</th>
+                  <th>Last Message Time</th>
+                </tr>
+              </thead>
+              <tbody id="whatsapp-logs-tbody">
+                <tr>
+                  <td><strong>+1 (555) 234-8901</strong></td>
+                  <td>"Appointment Booking Confirmation & Location Pin"</td>
+                  <td>11 mins ago</td>
+                  <td>2 mins ago</td>
+                </tr>
+                <tr>
+                  <td><strong>+1 (555) 876-1122</strong></td>
+                  <td>"Emergency Consultation Slot Reserved - Apex Dental"</td>
+                  <td>44 mins ago</td>
+                  <td>15 mins ago</td>
+                </tr>
+                <tr>
+                  <td><strong>+1 (555) 901-4433</strong></td>
+                  <td>"Grand Palace Banquets Digital Brochure & Viewing Tour"</td>
+                  <td>2 hours ago</td>
+                  <td>1 hour ago</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== TAB 4: EMAIL SEQUENCES ==================== -->
+      <div id="view-email" class="tab-view">
+        <div class="dash-panel luxury-panel">
+          <div class="panel-header-flex">
+            <div>
+              <h4 class="luxury-panel-title-large">Automated Email Sequence Logs</h4>
+              <p class="sub-card-desc">Follow-up confirmations, PDF estimates, and intake summary reports sent to leads.</p>
+            </div>
+            <span class="hud-code-luxury">SERVER: EMAIL_AUTOMATION_RELAY</span>
+          </div>
+          <div class="table-container" style="margin-top: 20px;">
+            <table class="dash-table luxury-table">
+              <thead>
+                <tr>
+                  <th>Recipient Email</th>
+                  <th>Sequence Subject</th>
+                  <th>Sequence Type</th>
+                  <th>Time Dispatched</th>
+                </tr>
+              </thead>
+              <tbody id="email-logs-tbody">
+                <tr>
+                  <td><strong>sarah.connor@domain.com</strong></td>
+                  <td>Your Emergency Repair Ticket & Technician Dispatch</td>
+                  <td><span class="status-pill state-secured-luxury">Confirmation Mail</span></td>
+                  <td>10 mins ago</td>
+                </tr>
+                <tr>
+                  <td><strong>m.chang@healthmail.com</strong></td>
+                  <td>Emergency Dental Appointment Confirmation - Tomorrow 9:00 AM</td>
+                  <td><span class="status-pill state-sent-luxury">Rescheduling Mail</span></td>
+                  <td>42 mins ago</td>
+                </tr>
+                <tr>
+                  <td><strong>elena.rostova@vipbuyers.com</strong></td>
+                  <td>VIP Penthouse Private Walkthrough Confirmation</td>
+                  <td><span class="status-pill state-active-luxury">Informational Mail</span></td>
+                  <td>1 hour ago</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== TAB 5: MANAGE SUBSCRIPTION ==================== -->
+      <div id="view-subscription" class="tab-view">
+        <div class="dash-panel luxury-panel subscription-panel">
+          <div class="panel-header-flex">
+            <div>
+              <h4 class="luxury-panel-title-large">Subscription &amp; Tier Oversight</h4>
+              <p class="sub-card-desc">Active Allocation: <strong class="text-espresso" id="sub-plan">Enterprise Multi-Route Plan</strong></p>
+            </div>
+            <button class="btn btn-luxury-outline btn-sm" onclick="alert('Redirecting to secure billing portal...');">Manage Plan &amp; Invoices</button>
+          </div>
+          <div class="sub-details-grid" style="margin-top:20px;">
+            <div class="sub-stat">
+              <span class="sub-label">Billing Cycle</span>
+              <strong class="sub-val" id="sub-cycle">Annual Enterprise</strong>
+            </div>
+            <div class="sub-stat">
+              <span class="sub-label">Time Remaining</span>
+              <strong class="sub-val text-bronze" id="sub-days">242 Days Remaining</strong>
+            </div>
+            <div class="sub-stat">
+              <span class="sub-label">Next Renewal Date</span>
+              <strong class="sub-val" id="sub-renewal">April 12, 2027</strong>
+            </div>
+            <div class="sub-stat">
+              <span class="sub-label">Active Capacity</span>
+              <strong class="sub-val" id="sub-capacity">Unlimited Multi-Channel Routes</strong>
+            </div>
+          </div>
+        </div>
+        <!-- Instant Credit Top-Up Module -->
+        <div class="dash-panel luxury-panel dash-topup-panel">
+          <div class="panel-header-flex">
+            <div>
+              <h4 class="luxury-panel-title-large">Refill Credit Reserve</h4>
+              <p class="sub-card-desc">Inject instant credits directly to keep your account safely above the 20-credit lockout threshold.</p>
+            </div>
+            <span class="hud-code-luxury">WALLET: ATOMIC_TOPUP</span>
+          </div>
+
+          <div class="dash-topup-grid">
+            
+            <!-- Pack 1 -->
+            <div class="dash-topup-card">
+              <div class="dash-topup-card-body">
+                <span class="dash-topup-badge">MICRO BUFFER</span>
+                <div class="dash-topup-price">₹1,000</div>
+                <div class="dash-topup-credits">+1,000 Credits</div>
+                <p class="dash-topup-desc">~40 Voice Mins or 100 WhatsApp Flows</p>
+              </div>
+              <button class="btn btn-luxury-outline btn-sm dash-topup-btn" data-sku="topup_1k" data-base="1000">
+                Top Up ₹1,000
+              </button>
+            </div>
+
+            <!-- Pack 2 -->
+            <div class="dash-topup-card featured">
+              <div class="dash-topup-card-body">
+                <span class="dash-topup-badge gold">SURGE BOOSTER ★</span>
+                <div class="dash-topup-price gold">₹2,500</div>
+                <div class="dash-topup-credits gold">+2,500 Credits</div>
+                <p class="dash-topup-desc">~100 Voice Mins or 250 WhatsApp Flows</p>
+              </div>
+              <button class="btn btn-luxury-outline btn-sm dash-topup-btn featured-btn" data-sku="topup_2k5" data-base="2500">
+                Top Up ₹2,500
+              </button>
+            </div>
+
+            <!-- Pack 3 -->
+            <div class="dash-topup-card">
+              <div class="dash-topup-card-body">
+                <span class="dash-topup-badge">HIGH SURGE • +10% BONUS</span>
+                <div class="dash-topup-price">₹5,000</div>
+                <div class="dash-topup-credits">+5,500 Credits</div>
+                <p class="dash-topup-desc">~220 Voice Mins or 550 WhatsApp Flows</p>
+              </div>
+              <button class="btn btn-luxury-outline btn-sm dash-topup-btn" data-sku="topup_5k" data-base="5000">
+                Top Up ₹5,000
+              </button>
+            </div>
+
+          </div>
+        </div>
+        <!-- Credits Passbook Transaction History -->
+        <div class="dash-panel luxury-panel" style="margin-top: 24px;">
+          <div class="panel-header-flex">
+            <div>
+              <h4 class="luxury-panel-title-large">Credit Deduction Passbook</h4>
+              <p class="sub-card-desc">Real-time ledger of Voice AI and WhatsApp credits consumed.</p>
+            </div>
+            <span class="hud-code-luxury">PASSBOOK: ATOMIC_LEDGER</span>
+          </div>
+          <div class="table-container" style="margin-top: 16px;">
+            <table class="dash-table luxury-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Activity Type</th>
+                  <th>Description</th>
+                  <th>Credits Deducted</th>
+                </tr>
+              </thead>
+              <tbody id="credits-ledger-tbody">
+                <tr>
+                  <td colspan="4" style="text-align: center; color: #8c5319; padding: 18px;">
+                    <em>Loading credit history...</em>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== TAB 6: MESH CONNECTORS ==================== -->
+      <div id="view-integrations" class="tab-view">
+        <div class="dash-panel luxury-panel">
+          <div class="panel-header-flex">
+            <div>
+              <h4 class="luxury-panel-title-large">Integration Mesh Connectors</h4>
+              <p class="sub-card-desc">Live pipeline links connecting Voice AI to your CRM, Webhooks, and Spreadsheets.</p>
+            </div>
+            <span class="hud-code-luxury">SECURITY: ENCRYPTED TRANSIT</span>
+          </div>
+          <div class="integration-list" style="margin-top: 20px;">
+            <div class="integ-item luxury-integ">
+              <div class="integ-info">
+                <strong class="text-espresso">Live Voice Listener Gateway</strong>
+                <span>Sub-Second Response Pipeline</span>
+              </div>
+              <span class="status-pill state-secured-luxury">ACTIVE</span>
+            </div>
+            <div class="integ-item luxury-integ">
+              <div class="integ-info">
+                <strong class="text-espresso">WhatsApp Business API</strong>
+                <span>Direct Interactive Message Bridge</span>
+              </div>
+              <span class="status-pill state-secured-luxury">ACTIVE</span>
+            </div>
+            <div class="integ-item luxury-integ">
+              <div class="integ-info">
+                <strong class="text-espresso">Salesforce / HubSpot CRM</strong>
+                <span>Real-Time Webhook Pipeline</span>
+              </div>
+              <span class="status-pill state-secured-luxury">SYNC ON</span>
+            </div>
+            <div class="integ-item luxury-integ">
+              <div class="integ-info">
+                <strong class="text-espresso">Google Sheets Automation Bridge</strong>
+                <span>Live Row Ingestion Connector</span>
+              </div>
+              <span class="status-pill state-secured-luxury">CONNECTED</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const sessionData = JSON.parse(localStorage.getItem('afterhours_session') || '{}');
+      const token = localStorage.getItem('token') || sessionData.token;
+      const emailDisplay = document.getElementById('user-display-email');
+
+      // Verify JWT authentication existence
+      if (!sessionData.authenticated || !token) {
+        alert("Access Denied. Please log in.");
+        localStorage.removeItem('afterhours_session');
+        localStorage.removeItem('token');
+        localStorage.removeItem('userEmail');
+        window.location.href = 'index.html';
+        return;
+      }
+
+      if (sessionData && sessionData.email) {
+        emailDisplay.textContent = sessionData.email;
+      }
+
+      document.getElementById('btn-logout').addEventListener('click', () => {
+        localStorage.removeItem('afterhours_session');
+        window.location.href = 'index.html';
+      });
+
+      // ================= IN-PAGE MULTI-TAB SWITCHING LOGIC =================
+      const sidebarLinks = document.querySelectorAll('.sidebar-menu .sidebar-item');
+      const tabViews = document.querySelectorAll('.tab-view');
+      const viewTitle = document.getElementById('view-title');
+
+      const titleMap = {
+        'view-overview': 'Autonomous Lead Portfolio',
+        'view-logs': 'Voice AI Intercepted Leads',
+        'view-whatsapp': 'WhatsApp Dispatch Logs',
+        'view-email': 'Automated Email Sequences',
+        'view-subscription': 'Subscription & Tier Oversight',
+        'view-integrations': 'Mesh Connector Integrations'
+      };
+
+      sidebarLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetTabId = link.getAttribute('data-tab');
+
+          if (!targetTabId) return;
+
+          sidebarLinks.forEach(l => l.classList.remove('active'));
+          link.classList.add('active');
+
+          tabViews.forEach(view => {
+            if (view.id === targetTabId) {
+              view.classList.add('active-view');
+            } else {
+              view.classList.remove('active-view');
+            }
+          });
+
+          if (viewTitle && titleMap[targetTabId]) {
+            viewTitle.textContent = titleMap[targetTabId];
+          }
+        });
+      });
+
+      // Dynamic Counter Animation
+      const counters = document.querySelectorAll('.count-up');
+      counters.forEach(counter => {
+        const target = parseFloat(counter.dataset.value);
+        const prefix = counter.dataset.prefix || '';
+        const suffix = counter.dataset.suffix || '';
+        const decimals = parseInt(counter.dataset.decimals || '0', 10);
+        const duration = 1800;
+        const startTime = performance.now();
+
+        function updateCount(currentTime) {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          
+          const easeProgress = 1 - Math.pow(1 - progress, 4);
+          const currentValue = (easeProgress * target).toFixed(decimals);
+
+          counter.innerHTML = `${prefix}${currentValue}${suffix}`;
+
+          if (progress < 1) {
+            requestAnimationFrame(updateCount);
+          } else {
+            counter.innerHTML = `${prefix}${target.toFixed(decimals)}${suffix}`;
+          }
+        }
+
+        requestAnimationFrame(updateCount);
+      });
+      // Dashboard Top-Up Checkout Handler with 2% Convenience Fee
+      document.querySelectorAll('.dash-topup-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const sku = btn.dataset.sku;
+          const base = parseFloat(btn.dataset.base || '0');
+          const fee = Math.round(base * 0.024);
+          const total = base + fee;
+          const userEmail = sessionData?.email || 'admin@enterprise.com';
+
+          console.log(`[DASHBOARD TOPUP] SKU: ${sku} | Base: ₹${base} | Fee: ₹${fee} | Total: ₹${total}`);
+
+        if (typeof window.Razorpay !== 'undefined' && window.RAZORPAY_KEY_ID) {
+         const options = {
+           key: window.RAZORPAY_KEY_ID,
+           amount: total * 100, // Amount in paise (includes 2.40% fee)
+           currency: "INR",
+           name: "AfterHours Automation",
+           description: `Credit Wallet Recharge - ${sku}`,
+           handler: function (response) {
+             alert(`Top-Up Successful! Payment ID: ${response.razorpay_payment_id}`);
+             console.log("[DASHBOARD RAZORPAY SUCCESS]", response);
+           },
+           theme: {
+             color: "#c59b27"
+           }
+         };
+         const rzp = new Razorpay(options);
+         rzp.open();
+       } else {
+         alert("Razorpay SDK not loaded. Please check your internet connection.");
+       }
+        });
+      });
+    });
+  </script>
+  <script src="api-config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
